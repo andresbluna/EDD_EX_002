@@ -1,0 +1,3 @@
+"C:\Program Files\JetBrains\CLion 2024.1.2\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\EDD_EX_002.dir/objects.a
+C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\ar.exe qc CMakeFiles\EDD_EX_002.dir/objects.a @CMakeFiles\EDD_EX_002.dir\objects1.rsp
+C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\gcc.exe -g -Wl,--whole-archive CMakeFiles\EDD_EX_002.dir/objects.a -Wl,--no-whole-archive -o EDD_EX_002.exe -Wl,--out-implib,libEDD_EX_002.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\EDD_EX_002.dir\linkLibs.rsp
