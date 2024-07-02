@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "codigo_huffman/struct_cod_arbol_huffman.h"
+#include "codigo_huffman/crear_nodos_hoja.h"
+#include "codigo_huffman/unir_nodos.h"
+
 #DEFINE MAX_CHAR[256]
 
 

@@ -1,4 +1,7 @@
 #include "struct_cod_arbol_huffman.h"
+#include "codigo_huffman/struct_cod_arbol_huffman.h"
+#include "codigo_huffman/crear_nodos_hoja.h"
+#include "codigo_huffman/unir_nodos.h"
 
 nodo_arbol_hoffman* crearArbol(int numSimbolos, char simbolos[], int frecuencias[]) {
 

@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "struct_cod_arbol_huffman.h"
-#include "crear_nodos_hoja.h"
-#include "unir_nodos.h"
-#include "generar_codigo_huffman.h"
+#include "codigo_huffman/generar_codigo_huffman.h"
 
 int main() {
     char simbolos[] = {'a', 'b', 'c', 'd', 'e', 'f'};

@@ -4,7 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "struct_cod_arbol_huffman.h"
-
+#include "codigo_huffman/struct_cod_arbol_huffman.h"
+#include "codigo_huffman/crear_nodos_hoja.h"
+#include "codigo_huffman/unir_nodos.h"
 
 nodo_arbol_hoffman* crearNodoHoja(char simbolo, int frecuencia) {
     nodo_arbol_hoffman *nodo = (nodo_arbol_hoffman*)malloc(sizeof(nodo_arbol_hoffman));
