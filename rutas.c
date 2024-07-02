@@ -15,7 +15,7 @@ void estima_ruta(float *costo, punto_t *array, int cant_puntos, float **matriz, 
 
 int main() {
     FILE *mi_archivo;
-    mi_archivo = fopen("C:\\Users\\ferna\\ClionProjects\\rutas\\rutas_far.txt", "r");
+    mi_archivo = fopen("C:\\Desarrollo\\EDD_EX_002\\rutas_3.txt", "r"); //Cambiar la ruta del archivo txt al momento de ejecutar
     if (mi_archivo == NULL) {
         printf("Error al abrir el archivo.\n");
         exit(1);
