@@ -49,8 +49,14 @@ cmake_ninja_workdir = /Users/imagemaker/Desarrollo/EDD/EDD_EX_002/cmake-build-de
 
 build cmake_object_order_depends_target_EDD_EX_002: phony || CMakeFiles/EDD_EX_002.dir
 
-build CMakeFiles/EDD_EX_002.dir/main.c.o: C_COMPILER__EDD_EX_002_unscanned_Debug /Users/imagemaker/Desarrollo/EDD/EDD_EX_002/main.c || cmake_object_order_depends_target_EDD_EX_002
-  DEP_FILE = CMakeFiles/EDD_EX_002.dir/main.c.o.d
+build CMakeFiles/EDD_EX_002.dir/codigo_huffman_main.c.o: C_COMPILER__EDD_EX_002_unscanned_Debug /Users/imagemaker/Desarrollo/EDD/EDD_EX_002/codigo_huffman_main.c || cmake_object_order_depends_target_EDD_EX_002
+  DEP_FILE = CMakeFiles/EDD_EX_002.dir/codigo_huffman_main.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/EDD_EX_002.dir
+  OBJECT_FILE_DIR = CMakeFiles/EDD_EX_002.dir
+
+build CMakeFiles/EDD_EX_002.dir/romantico_viajero_main.c.o: C_COMPILER__EDD_EX_002_unscanned_Debug /Users/imagemaker/Desarrollo/EDD/EDD_EX_002/romantico_viajero_main.c || cmake_object_order_depends_target_EDD_EX_002
+  DEP_FILE = CMakeFiles/EDD_EX_002.dir/romantico_viajero_main.c.o.d
   FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
   OBJECT_DIR = CMakeFiles/EDD_EX_002.dir
   OBJECT_FILE_DIR = CMakeFiles/EDD_EX_002.dir
@@ -63,7 +69,7 @@ build CMakeFiles/EDD_EX_002.dir/main.c.o: C_COMPILER__EDD_EX_002_unscanned_Debug
 #############################################
 # Link the executable EDD_EX_002
 
-build EDD_EX_002: C_EXECUTABLE_LINKER__EDD_EX_002_Debug CMakeFiles/EDD_EX_002.dir/main.c.o
+build EDD_EX_002: C_EXECUTABLE_LINKER__EDD_EX_002_Debug CMakeFiles/EDD_EX_002.dir/codigo_huffman_main.c.o CMakeFiles/EDD_EX_002.dir/romantico_viajero_main.c.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
   OBJECT_DIR = CMakeFiles/EDD_EX_002.dir
   POST_BUILD = :
