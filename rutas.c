@@ -17,7 +17,7 @@ int main() {
     FILE *mi_archivo;
     mi_archivo = fopen("C:\\Users\\ferna\\ClionProjects\\rutas\\rutas_far.txt", "r");
     if (mi_archivo == NULL) {
-        perror("Error al abrir el archivo");
+        printf("Error al abrir el archivo.\n");
         exit(1);
     }
 
@@ -52,18 +52,16 @@ int main() {
             exit(1);
         }
     }
-
     for (i = 0; i < cant_puntos; i++) {
         fscanf(mi_archivo, "%c,%f,%f\n", &array[i].letra, &array[i].x, &array[i].y);
         printf("%c,%.14f,%.14f\n", array[i].letra, array[i].x, array[i].y);
+        fflush(stdin);
     }
-    fflush(stdin);
 
     llena_matriz(array, cant_puntos, matriz);
     imprime_matriz(cant_puntos, matriz);
 
     costo = 0;
-
     estima_ruta(&costo, array, cant_puntos, matriz, ruta);
     printf("La mejor ruta es %s con un costo de %g\n", ruta, costo);
 
@@ -74,7 +72,6 @@ int main() {
     free(array);
     free(ruta);
     fclose(mi_archivo);
-
     return 0;
 }
 
@@ -103,7 +100,7 @@ void imprime_matriz(int cant_puntos, float **mat) {
     for (i = 0; i < cant_puntos; i++) {
         for (j = 0; j < cant_puntos; j++) {
             // Imprimir con 14 decimales
-            printf("%.2f\t", mat[i][j]);
+            printf("%0.2f\t", mat[i][j]);
         }
         printf("\n");
     }
