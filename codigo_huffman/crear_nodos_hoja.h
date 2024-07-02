@@ -2,11 +2,23 @@
 #define CREAR_NODOS_HOJA_H
 
 #include <stdio.h>
+#include <stdlib.h>
+#include "struct_cod_arbol_huffman.h"
 
-// Función para crear nodos hojas
+
 nodo_arbol_hoffman* crearNodoHoja(char simbolo, int frecuencia) {
-    return 0;
-}
+    nodo_arbol_hoffman *nodo = (nodo_arbol_hoffman*)malloc(sizeof(nodo_arbol_hoffman));
+    if (nodo == NULL) {
+        printf("Error al asignar memoria para el nodo");
+        exit(1);
+    }
 
+    nodo->caracter = simbolo;
+    nodo->frecuencia = frecuencia;
+    nodo->izq = NULL;
+    nodo->der = NULL;
+
+    return nodo;
+}
 
 #endif

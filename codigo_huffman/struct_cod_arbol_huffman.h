@@ -8,13 +8,12 @@
 #DEFINE MAX_CHAR[256]
 
 
-//definir la estructura del nodo del arbol
+
 typedef struct {
     char cadena_texto;
     struct nodo_arbol_hoffman *izq, *der;
 }Hoja;
 
-//definir la estructura del nodo hoja
 
 typedef struct {
     Hoja nodo_hoja;

@@ -1,8 +1,22 @@
 #ifndef UNIR_NODOS_H
 #define UNIR_NODOS_H
 
-nodo_arbol_hoffman* unirLosNodos (nodo_arbol_hoffman* izq, nodo_arbol_hoffman der*) {
-    return 0;
+#include <stdlib.h>
+#include "struct_cod_arbol_huffman.h"
+
+    nodo_arbol_hoffman* unirLosNodos(nodo_arbol_hoffman* izq, nodo_arbol_hoffman* der) {
+    nodo_arbol_hoffman* nodoPadre = (nodo_arbol_hoffman*)malloc(sizeof(nodo_arbol_hoffman));
+    if (nodoPadre == NULL) {
+        printf("Error al asignar memoria");
+        exit(1);
+
+
+    nodoPadre->caracter = '\0';
+    nodoPadre->frecuencia = izq->frecuencia + der->frecuencia;
+    nodoPadre->izq = izq;
+    nodoPadre->der = der;
+
+    return nodoPadre;
 }
 
 #endif
