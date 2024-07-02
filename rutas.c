@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 typedef struct punto {
     char letra;
@@ -12,13 +13,14 @@ float distancia_euclidea(punto_t p1, punto_t p2);
 void llena_matriz(punto_t *list, int cant_puntos, float **mat);
 void imprime_matriz(int cant_puntos, float **mat);
 void estima_ruta(float *costo, punto_t *array, int cant_puntos, float **matriz, char *ruta);
+void estima_ruta_aleatoria(float *costo, punto_t *array, int cant_puntos, float **matriz, char *ruta);
 
 int main() {
     FILE *mi_archivo;
     mi_archivo = fopen("C:\\Desarrollo\\EDD_EX_002\\rutas_3.txt", "r"); //Cambiar la ruta del archivo txt al momento de ejecutar
     if (mi_archivo == NULL) {
         printf("Error al abrir el archivo.\n");
-        exit(1);
+        exit(0);
     }
 
     int cant_puntos, i;
@@ -34,7 +36,7 @@ int main() {
         exit(1);
     }
 
-    ruta = malloc(sizeof(char) * (cant_puntos + 1));
+    ruta = malloc(sizeof(char) * (cant_puntos + 2)); // Aumentar el tamaño para incluir el último punto y el null terminator
     if (ruta == NULL) {
         perror("Error al reservar memoria para ruta");
         exit(1);
@@ -53,7 +55,7 @@ int main() {
         }
     }
     for (i = 0; i < cant_puntos; i++) {
-        fscanf(mi_archivo, "%c,%f,%f\n", &array[i].letra, &array[i].x, &array[i].y);
+        fscanf(mi_archivo, " %c,%f,%f\n", &array[i].letra, &array[i].x, &array[i].y);
         printf("%c,%.14f,%.14f\n", array[i].letra, array[i].x, array[i].y);
         fflush(stdin);
     }
@@ -63,7 +65,11 @@ int main() {
 
     costo = 0;
     estima_ruta(&costo, array, cant_puntos, matriz, ruta);
-    printf("La mejor ruta es %s con un costo de %g\n", ruta, costo);
+    printf("La mejor ruta (KNN) es %s con un costo de %g\n", ruta, costo);
+
+    costo = 0;
+    estima_ruta_aleatoria(&costo, array, cant_puntos, matriz, ruta);
+    printf("La ruta aleatoria es %s con un costo de %g\n", ruta, costo);
 
     for (i = 0; i < cant_puntos; i++) {
         free(matriz[i]);
@@ -99,7 +105,6 @@ void imprime_matriz(int cant_puntos, float **mat) {
     int i, j;
     for (i = 0; i < cant_puntos; i++) {
         for (j = 0; j < cant_puntos; j++) {
-            // Imprimir con 14 decimales
             printf("%0.2f\t", mat[i][j]);
         }
         printf("\n");
@@ -144,4 +149,45 @@ void estima_ruta(float *costo, punto_t *array, int cant_puntos, float **matriz, 
     *costo += matriz[actual][inicio];
     ruta[cant_puntos] = array[inicio].letra;
     ruta[cant_puntos + 1] = '\0';
+}
+
+void estima_ruta_aleatoria(float *costo, punto_t *array, int cant_puntos, float **matriz, char *ruta) {
+    int i, j, inicio, actual, siguiente;
+    int *visitado = (int *)malloc(cant_puntos * sizeof(int));
+
+    if (visitado == NULL) {
+        perror("Error al reservar memoria para visitado");
+        exit(1);
+    }
+
+    *costo = 0;
+    inicio = 0;
+
+    for (i = 0; i < cant_puntos; i++) {
+        visitado[i] = 0;
+    }
+
+    actual = inicio;
+    ruta[0] = array[inicio].letra;
+    visitado[inicio] = 1;
+
+    srand(time(NULL));
+
+    for (i = 1; i < cant_puntos; i++) {
+        do {
+            siguiente = rand() % cant_puntos;
+        } while (visitado[siguiente]);
+
+        *costo += matriz[actual][siguiente];
+
+        visitado[siguiente] = 1;
+        actual = siguiente;
+        ruta[i] = array[siguiente].letra;
+    }
+
+    *costo += matriz[actual][inicio];
+    ruta[cant_puntos] = array[inicio].letra;
+    ruta[cant_puntos + 1] = '\0';
+
+    free(visitado);
 }
