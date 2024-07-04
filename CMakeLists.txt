@@ -7,4 +7,5 @@ add_executable(EDD_EX_002 codigo_huffman_main.c
         codigo_huffman/arbol_huffman.h
         codigo_huffman/arbol_huffman.c
         decodificador_binario.c
+        huffman_test02.c
 )
