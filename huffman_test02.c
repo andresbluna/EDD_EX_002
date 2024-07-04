@@ -4,12 +4,15 @@
 
 #define MAX_TREE_HT 100
 #define MAX_CHARS 256
+#define MAX_CHILDREN 10
 
 // Estructura para representar un nodo del árbol de Huffman
 typedef struct Nodo {
     char data;
     unsigned freq;
     struct Nodo *left, *right;
+    struct Nodo *children[MAX_CHILDREN];
+    int numChildren;
 } Nodo;
 
 // Estructura para representar una cola de prioridad (montículo mínimo)
@@ -25,7 +28,36 @@ Nodo* crearNodo(char data, unsigned freq) {
     nodo->data = data;
     nodo->freq = freq;
     nodo->left = nodo->right = NULL;
+    for (int i = 0; i < MAX_CHILDREN; i++) {
+        nodo->children[i] = NULL;
+    }
+    nodo->numChildren = 0;
     return nodo;
+}
+
+void insertarHijo(Nodo* padre, Nodo* hijo) {
+    if (padre->numChildren < MAX_CHILDREN) {
+        padre->children[padre->numChildren] = hijo;
+        padre->numChildren++;
+    }
+}
+
+void recorridoPreordenGeneral(Nodo* nodo) {
+    if (nodo == NULL)
+        return;
+    printf("%c ", nodo->data);
+    for (int i = 0; i < nodo->numChildren; i++) {
+        recorridoPreordenGeneral(nodo->children[i]);
+    }
+}
+
+void recorridoPostordenGeneral(Nodo* nodo) {
+    if (nodo == NULL)
+        return;
+    for (int i = 0; i < nodo->numChildren; i++) {
+        recorridoPostordenGeneral(nodo->children[i]);
+    }
+    printf("%c ", nodo->data);
 }
 
 // Función para crear una cola de prioridad vacía
@@ -199,7 +231,7 @@ Nodo* insertarElemento(Nodo* nodo, char data, int freq) {
     return nodo;
 }
 
-    // Función para calcular la frecuencia de cada carácter en el texto
+// Función para calcular la frecuencia de cada carácter en el texto
 void calcularFrecuencia(const char* text, int* freq) {
     for (int i = 0; text[i]; i++)
         freq[(unsigned char)text[i]]++;
@@ -222,7 +254,6 @@ void almacenarCodigos(Nodo* nodo, int arr[], int top, char* codigos[]) {
         codigos[nodo->data][top] = '\0';
     }
 }
-
 
 // Función para comprimir el texto utilizando los códigos de Huffman
 char* comprimirTexto(const char* text, Nodo* nodo, int* comprimidoSize) {
@@ -263,22 +294,24 @@ char* comprimirTexto(const char* text, Nodo* nodo, int* comprimidoSize) {
     return comprimido;
 }
 
-// Función para guardar el árbol de Huffman en un archivo
+// Función para guardar el árbol de Huffman en los archivos
 void guardarArbolHuffman(Nodo* nodo, FILE* file) {
     if (nodo == NULL) {
-        fprintf(file, "0");
+        fputc(0, file);
         return;
     }
 
-    fprintf(file, "1");
+    fputc(1, file);
     if (esHoja(nodo)) {
-        fprintf(file, "1%c", nodo->data);
+        fputc(1, file);
+        fputc(nodo->data, file);
     } else {
-        fprintf(file, "0");
+        fputc(0, file);
         guardarArbolHuffman(nodo->left, file);
         guardarArbolHuffman(nodo->right, file);
     }
 }
+
 
 // Función para cargar el árbol de Huffman desde un archivo
 Nodo* cargarArbolHuffman(FILE* file) {
@@ -347,19 +380,39 @@ int main() {
     char* comprimido = comprimirTexto(text, raiz, &comprimidoSize);
     printf("Tamaño comprimido: %d bytes\n", comprimidoSize);
 
+    // Guardar el archivo comprimido en formato binario
     FILE* comprimidoFile = fopen("comprimido.bin", "wb");
     fwrite(comprimido, sizeof(char), comprimidoSize, comprimidoFile);
     fclose(comprimidoFile);
 
-    FILE* treeFile = fopen("arbol.bin", "w");
+    // Guardar el árbol de Huffman
+    FILE* treeFile = fopen("arbol.bin", "wb");
     guardarArbolHuffman(raiz, treeFile);
     fclose(treeFile);
 
-    printf("Archivo comprimido y árbol de Huffman guardados.\n");
+    // Guardar la representación binaria en un archivo de texto
+    FILE* binarioFile = fopen("comprimido_binario.txt", "w");
+    if (binarioFile == NULL) {
+        printf("Error al abrir el archivo para guardar el binario\n");
+        return 1;
+    }
 
+    for (int i = 0; i < comprimidoSize; i++) {
+        for (int j = 7; j >= 0; j--) {
+            fprintf(binarioFile, "%d", (comprimido[i] >> j) & 1);
+        }
+    }
+
+    fclose(binarioFile);
+
+    printf("Archivo comprimido, árbol de Huffman y representación binaria guardados.\n");
+
+    // Liberar memoria
     free(text);
     free(comprimido);
 
     return 0;
 }
+
+
 

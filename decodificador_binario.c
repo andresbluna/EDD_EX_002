@@ -78,8 +78,8 @@ void freeHuffmanTree(Grupo_Nodo_Menor* root) {
 }
 
 int main() {
-    const char* archivo_comprimidoFilename = "archivo_comprimido.bin";
-    const char* treeFilename = "arbol_huffman.bin";
+    const char* archivo_comprimidoFilename = "comprimido.bin";
+    const char* treeFilename = "arbol.bin";
     const char* outputFilename = "archivo_descomprimido.txt";
 
 
