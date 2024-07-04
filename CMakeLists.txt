@@ -3,4 +3,4 @@ project(EDD_EX_002 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(EDD_EX_002 rutas.c)
+add_executable(EDD_EX_002 mainn.c)

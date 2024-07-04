@@ -68,28 +68,28 @@ include CMakeFiles/EDD_EX_002.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/EDD_EX_002.dir/flags.make
 
-CMakeFiles/EDD_EX_002.dir/rutas.c.obj: CMakeFiles/EDD_EX_002.dir/flags.make
-CMakeFiles/EDD_EX_002.dir/rutas.c.obj: C:/Desarrollo/EDD_EX_002/rutas.c
-CMakeFiles/EDD_EX_002.dir/rutas.c.obj: CMakeFiles/EDD_EX_002.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Desarrollo\EDD_EX_002\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/EDD_EX_002.dir/rutas.c.obj"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/EDD_EX_002.dir/rutas.c.obj -MF CMakeFiles\EDD_EX_002.dir\rutas.c.obj.d -o CMakeFiles\EDD_EX_002.dir\rutas.c.obj -c C:\Desarrollo\EDD_EX_002\rutas.c
+CMakeFiles/EDD_EX_002.dir/mainn.c.obj: CMakeFiles/EDD_EX_002.dir/flags.make
+CMakeFiles/EDD_EX_002.dir/mainn.c.obj: C:/Desarrollo/EDD_EX_002/mainn.c
+CMakeFiles/EDD_EX_002.dir/mainn.c.obj: CMakeFiles/EDD_EX_002.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Desarrollo\EDD_EX_002\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/EDD_EX_002.dir/mainn.c.obj"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/EDD_EX_002.dir/mainn.c.obj -MF CMakeFiles\EDD_EX_002.dir\mainn.c.obj.d -o CMakeFiles\EDD_EX_002.dir\mainn.c.obj -c C:\Desarrollo\EDD_EX_002\mainn.c
 
-CMakeFiles/EDD_EX_002.dir/rutas.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/EDD_EX_002.dir/rutas.c.i"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Desarrollo\EDD_EX_002\rutas.c > CMakeFiles\EDD_EX_002.dir\rutas.c.i
+CMakeFiles/EDD_EX_002.dir/mainn.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/EDD_EX_002.dir/mainn.c.i"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Desarrollo\EDD_EX_002\mainn.c > CMakeFiles\EDD_EX_002.dir\mainn.c.i
 
-CMakeFiles/EDD_EX_002.dir/rutas.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/EDD_EX_002.dir/rutas.c.s"
-	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Desarrollo\EDD_EX_002\rutas.c -o CMakeFiles\EDD_EX_002.dir\rutas.c.s
+CMakeFiles/EDD_EX_002.dir/mainn.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/EDD_EX_002.dir/mainn.c.s"
+	C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Desarrollo\EDD_EX_002\mainn.c -o CMakeFiles\EDD_EX_002.dir\mainn.c.s
 
 # Object files for target EDD_EX_002
 EDD_EX_002_OBJECTS = \
-"CMakeFiles/EDD_EX_002.dir/rutas.c.obj"
+"CMakeFiles/EDD_EX_002.dir/mainn.c.obj"
 
 # External object files for target EDD_EX_002
 EDD_EX_002_EXTERNAL_OBJECTS =
 
-EDD_EX_002.exe: CMakeFiles/EDD_EX_002.dir/rutas.c.obj
+EDD_EX_002.exe: CMakeFiles/EDD_EX_002.dir/mainn.c.obj
 EDD_EX_002.exe: CMakeFiles/EDD_EX_002.dir/build.make
 EDD_EX_002.exe: CMakeFiles/EDD_EX_002.dir/linkLibs.rsp
 EDD_EX_002.exe: CMakeFiles/EDD_EX_002.dir/objects1.rsp

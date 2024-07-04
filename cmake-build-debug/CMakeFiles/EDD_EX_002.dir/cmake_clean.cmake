@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/EDD_EX_002.dir/rutas.c.obj"
-  "CMakeFiles/EDD_EX_002.dir/rutas.c.obj.d"
+  "CMakeFiles/EDD_EX_002.dir/mainn.c.obj"
+  "CMakeFiles/EDD_EX_002.dir/mainn.c.obj.d"
   "EDD_EX_002.exe"
   "EDD_EX_002.exe.manifest"
   "EDD_EX_002.pdb"

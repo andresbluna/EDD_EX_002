@@ -78,7 +78,7 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="C:/Desarrollo/EDD_EX_002/rutas.c">
+		<Unit filename="C:/Desarrollo/EDD_EX_002/mainn.c">
 			<Option target="EDD_EX_002"/>
 		</Unit>
 		<Unit filename="C:/Desarrollo/EDD_EX_002/CMakeLists.txt">

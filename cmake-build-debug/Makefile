@@ -128,29 +128,29 @@ EDD_EX_002/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDD_EX_002.dir\build.make CMakeFiles/EDD_EX_002.dir/build
 .PHONY : EDD_EX_002/fast
 
-rutas.obj: rutas.c.obj
-.PHONY : rutas.obj
+mainn.obj: mainn.c.obj
+.PHONY : mainn.obj
 
 # target to build an object file
-rutas.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDD_EX_002.dir\build.make CMakeFiles/EDD_EX_002.dir/rutas.c.obj
-.PHONY : rutas.c.obj
+mainn.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDD_EX_002.dir\build.make CMakeFiles/EDD_EX_002.dir/mainn.c.obj
+.PHONY : mainn.c.obj
 
-rutas.i: rutas.c.i
-.PHONY : rutas.i
+mainn.i: mainn.c.i
+.PHONY : mainn.i
 
 # target to preprocess a source file
-rutas.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDD_EX_002.dir\build.make CMakeFiles/EDD_EX_002.dir/rutas.c.i
-.PHONY : rutas.c.i
+mainn.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDD_EX_002.dir\build.make CMakeFiles/EDD_EX_002.dir/mainn.c.i
+.PHONY : mainn.c.i
 
-rutas.s: rutas.c.s
-.PHONY : rutas.s
+mainn.s: mainn.c.s
+.PHONY : mainn.s
 
 # target to generate assembly for a file
-rutas.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDD_EX_002.dir\build.make CMakeFiles/EDD_EX_002.dir/rutas.c.s
-.PHONY : rutas.c.s
+mainn.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\EDD_EX_002.dir\build.make CMakeFiles/EDD_EX_002.dir/mainn.c.s
+.PHONY : mainn.c.s
 
 # Help Target
 help:
@@ -161,9 +161,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... EDD_EX_002
-	@echo ... rutas.obj
-	@echo ... rutas.i
-	@echo ... rutas.s
+	@echo ... mainn.obj
+	@echo ... mainn.i
+	@echo ... mainn.s
 .PHONY : help
 
 
