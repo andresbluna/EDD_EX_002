@@ -6,6 +6,7 @@ set(CMAKE_C_STANDARD 11)
 add_executable(EDD_EX_002 codigo_huffman_main.c
         codigo_huffman/arbol_huffman.h
         codigo_huffman/arbol_huffman.c
-        decodificador_binario.c
-        huffman_test02.c
+        arbol_huffman/decodificador_binario.c
+        arbol_huffman/huffman_test02.c
+        vendedor_viajero/vendedor_viajero.c
 )

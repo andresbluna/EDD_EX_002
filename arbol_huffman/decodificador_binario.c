@@ -1,13 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
+
+// Definición de la estructura Nodo para el árbol Huffman
 typedef struct Nodo {
     char data;
     unsigned freq;
     struct Nodo *left, *right;
 } Nodo;
 
+// Función para crear un nuevo nodo del árbol Huffman
 Nodo* crearNodo(char data, unsigned freq) {
     Nodo* nodo = (Nodo*) malloc(sizeof(Nodo));
     nodo->data = data;
@@ -16,6 +18,7 @@ Nodo* crearNodo(char data, unsigned freq) {
     return nodo;
 }
 
+// Función para cargar el árbol Huffman desde un archivo binario
 Nodo* cargarArbolHuffman(FILE* file) {
     char tipoNodo;
     if (fscanf(file, "%c", &tipoNodo) != 1 || tipoNodo == '0')
@@ -34,9 +37,9 @@ Nodo* cargarArbolHuffman(FILE* file) {
 
     return NULL;
 }
-
+// Función para decodificar la cadena comprimida usando el árbol Huffman
 char* decodificar(Nodo* raiz, unsigned char* strComprimido, int longitud) {
-    char* decodificado = (char*) malloc(longitud * 8 + 1); // Cada byte puede contener hasta 8 bits.
+    char* decodificado = (char*) malloc(longitud * 8 + 1);
     Nodo* current = raiz;
     int bitIndex = 0, decodeIndex = 0;
 
@@ -58,6 +61,7 @@ char* decodificar(Nodo* raiz, unsigned char* strComprimido, int longitud) {
     return decodificado;
 }
 
+// Función principal
 int main() {
     FILE* treeFile = fopen("arbol.bin", "rb");
     if (!treeFile) {
