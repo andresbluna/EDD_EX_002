@@ -5,145 +5,203 @@
 #define MAX_TREE_HT 100
 #define MAX_CHARS 256
 
-typedef struct MinHeapNode {
+typedef struct Grupo_Nodo_Menor {
     char data;
     unsigned freq;
-    struct MinHeapNode *left, *right;
-} MinHeapNode;
+    struct Grupo_Nodo_Menor *left, *right;
+} Grupo_Nodo_Menor;
 
-typedef struct MinHeap {
+typedef struct Grupo_Menor {
     unsigned size;
     unsigned capacity;
-    MinHeapNode **array;
-} MinHeap;
+    Grupo_Nodo_Menor **array;
+} Grupo_Menor;
 
-MinHeapNode* newNode(char data, unsigned freq) {
-    MinHeapNode* temp = (MinHeapNode*) malloc(sizeof(MinHeapNode));
+
+//Crea un nuevo nodo para el árbol de Huffman.
+Grupo_Nodo_Menor* nuevo_nodo(char data, unsigned freq) {
+    Grupo_Nodo_Menor* temp = (Grupo_Nodo_Menor*) malloc(sizeof(Grupo_Nodo_Menor));
+    if (temp==NULL) {
+        printf("No fue posible reservar memoria");
+        exit(1);
+    }
     temp->left = temp->right = NULL;
     temp->data = data;
     temp->freq = freq;
     return temp;
 }
 
-MinHeap* createMinHeap(unsigned capacity) {
-    MinHeap* minHeap = (MinHeap*) malloc(sizeof(MinHeap));
-    minHeap->size = 0;
-    minHeap->capacity = capacity;
-    minHeap->array = (MinHeapNode**) malloc(minHeap->capacity * sizeof(MinHeapNode*));
-    return minHeap;
+//Crea un nuevo grupo mínimo vacío.
+Grupo_Menor* crearGrupo_Menor(unsigned capacity) {
+    Grupo_Menor* grupoMenor = (Grupo_Menor*) malloc(sizeof(Grupo_Menor));
+    if (grupoMenor==NULL) {
+        printf("No fue posible reservar memoria");
+        exit(1);
+    }
+    grupoMenor->size = 0;
+    grupoMenor->capacity = capacity;
+    grupoMenor->array = (Grupo_Nodo_Menor**) malloc(grupoMenor->capacity * sizeof(Grupo_Nodo_Menor*));
+    return grupoMenor;
 }
 
-void swapMinHeapNode(MinHeapNode** a, MinHeapNode** b) {
-    MinHeapNode* t = *a;
+//Intercambia dos nodos en el montículo.
+void intercambiar_grupo_nodo_menor(Grupo_Nodo_Menor** a, Grupo_Nodo_Menor** b) {
+    Grupo_Nodo_Menor* t = *a;
     *a = *b;
     *b = t;
 }
 
-void minHeapify(MinHeap* minHeap, int idx) {
-    int smallest = idx;
-    int left = 2 * idx + 1;
-    int right = 2 * idx + 2;
+//Mantiene la propiedad de grupo mínimo.
+void agrupar_menor(Grupo_Menor* grupoMenor) {
+    int i = 0;
+    while (1) {
+        int smallest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
 
-    if (left < minHeap->size && minHeap->array[left]->freq < minHeap->array[smallest]->freq)
-        smallest = left;
+        if (left < grupoMenor->size && grupoMenor->array[left]->freq < grupoMenor->array[smallest]->freq)
+            smallest = left;
+        if (right < grupoMenor->size && grupoMenor->array[right]->freq < grupoMenor->array[smallest]->freq)
+            smallest = right;
 
-    if (right < minHeap->size && minHeap->array[right]->freq < minHeap->array[smallest]->freq)
-        smallest = right;
+        if (smallest == i)
+            break;
 
-    if (smallest != idx) {
-        swapMinHeapNode(&minHeap->array[smallest], &minHeap->array[idx]);
-        minHeapify(minHeap, smallest);
+        Grupo_Nodo_Menor* temp = grupoMenor->array[i];
+        grupoMenor->array[i] = grupoMenor->array[smallest];
+        grupoMenor->array[smallest] = temp;
+
+        i = smallest;
     }
 }
 
-int isSizeOne(MinHeap* minHeap) {
-    return (minHeap->size == 1);
+//Verifica si el grupo tiene solo un elemento.
+int es_tamano_uno(Grupo_Menor* grupoMenor) {
+    return (grupoMenor->size == 1);
 }
 
-MinHeapNode* extractMin(MinHeap* minHeap) {
-    MinHeapNode* temp = minHeap->array[0];
-    minHeap->array[0] = minHeap->array[minHeap->size - 1];
-    --minHeap->size;
-    minHeapify(minHeap, 0);
-    return temp;
+//Extrae el nodo con la frecuencia mínima del grupo.
+Grupo_Nodo_Menor* extraer_menor(Grupo_Menor* grupoMenor) {
+    if (grupoMenor->size <= 0)
+        return NULL;
+
+    Grupo_Nodo_Menor* root = grupoMenor->array[0];
+
+    if (grupoMenor->size > 1) {
+        grupoMenor->array[0] = grupoMenor->array[grupoMenor->size - 1];
+        grupoMenor->size--;
+        agrupar_menor(grupoMenor);
+    } else {
+        grupoMenor->size = 0;
+    }
+
+    return root;
 }
 
-void insertMinHeap(MinHeap* minHeap, MinHeapNode* minHeapNode) {
-    ++minHeap->size;
-    int i = minHeap->size - 1;
-    while (i && minHeapNode->freq < minHeap->array[(i - 1) / 2]->freq) {
-        minHeap->array[i] = minHeap->array[(i - 1) / 2];
+
+// Inserta un nuevo nodo en el montículo.
+void insertar_grupo_menor(Grupo_Menor* grupoMenor, Grupo_Nodo_Menor* grupoMenorNode) {
+    ++grupoMenor->size;
+    int i = grupoMenor->size - 1;
+    while (i && grupoMenorNode->freq < grupoMenor->array[(i - 1) / 2]->freq) {
+        grupoMenor->array[i] = grupoMenor->array[(i - 1) / 2];
         i = (i - 1) / 2;
     }
-    minHeap->array[i] = minHeapNode;
+    grupoMenor->array[i] = grupoMenorNode;
 }
 
-void buildMinHeap(MinHeap* minHeap) {
-    int n = minHeap->size - 1;
-    int i;
-    for (i = (n - 1) / 2; i >= 0; --i)
-        minHeapify(minHeap, i);
+//Construye un montículo mínimo a partir de un arreglo de nodos.
+void construir_grupo_menor(Grupo_Menor* grupoMenor) {
+    for (int i = grupoMenor->size / 2 - 1; i >= 0; i--) {
+        int current = i;
+        while (1) {
+            int smallest = current;
+            int left = 2 * current + 1;
+            int right = 2 * current + 2;
+
+            if (left < grupoMenor->size && grupoMenor->array[left]->freq < grupoMenor->array[smallest]->freq)
+                smallest = left;
+            if (right < grupoMenor->size && grupoMenor->array[right]->freq < grupoMenor->array[smallest]->freq)
+                smallest = right;
+
+            if (smallest == current)
+                break;
+
+            Grupo_Nodo_Menor* temp = grupoMenor->array[current];
+            grupoMenor->array[current] = grupoMenor->array[smallest];
+            grupoMenor->array[smallest] = temp;
+
+            current = smallest;
+        }
+    }
 }
 
-int isLeaf(MinHeapNode* root) {
+
+//Verifica si un nodo es una hoja en el árbol.
+int es_hoja(Grupo_Nodo_Menor* root) {
     return !(root->left) && !(root->right);
 }
 
-MinHeap* createAndBuildMinHeap(char data[], int freq[], int size) {
-    MinHeap* minHeap = createMinHeap(size);
+//Crea y construye un montículo mínimo a partir de datos y frecuencias.
+Grupo_Menor* crear_y_construir_grupo_menor(char data[], int freq[], int size) {
+    Grupo_Menor* grupoMenor = crearGrupo_Menor(size);
     for (int i = 0; i < size; ++i)
-        minHeap->array[i] = newNode(data[i], freq[i]);
-    minHeap->size = size;
-    buildMinHeap(minHeap);
-    return minHeap;
+        grupoMenor->array[i] = nuevo_nodo(data[i], freq[i]);
+    grupoMenor->size = size;
+    construir_grupo_menor(grupoMenor);
+    return grupoMenor;
 }
 
-MinHeapNode* buildHuffmanTree(char data[], int freq[], int size) {
-    MinHeapNode *left, *right, *top;
-    MinHeap* minHeap = createAndBuildMinHeap(data, freq, size);
+//Construye el árbol de Huffman.
+Grupo_Nodo_Menor* construir_arbol_huffman(char data[], int freq[], int size) {
+    Grupo_Nodo_Menor *left, *right, *top;
+    Grupo_Menor* grupoMenor = crear_y_construir_grupo_menor(data, freq, size);
 
-    while (!isSizeOne(minHeap)) {
-        left = extractMin(minHeap);
-        right = extractMin(minHeap);
-        top = newNode('$', left->freq + right->freq);
+    while (!es_tamano_uno(grupoMenor)) {
+        left = extraer_menor(grupoMenor);
+        right = extraer_menor(grupoMenor);
+        top = nuevo_nodo('$', left->freq + right->freq);
         top->left = left;
         top->right = right;
-        insertMinHeap(minHeap, top);
+        insertar_grupo_menor(grupoMenor, top);
     }
-    return extractMin(minHeap);
+    return extraer_menor(grupoMenor);
 }
 
-void printArr(int arr[], int n) {
+//Imprime un arreglo de enteros.
+void imprimir_arreglo(int arr[], int n) {
     for (int i = 0; i < n; ++i)
         printf("%d", arr[i]);
     printf("\n");
 }
 
-void printCodes(MinHeapNode* root, int arr[], int top) {
+//Imprime los códigos de Huffman para cada carácter.
+void imprimir_codigos(Grupo_Nodo_Menor* root, int arr[], int top) {
     if (root->left) {
         arr[top] = 0;
-        printCodes(root->left, arr, top + 1);
+        imprimir_codigos(root->left, arr, top + 1);
     }
     if (root->right) {
         arr[top] = 1;
-        printCodes(root->right, arr, top + 1);
+        imprimir_codigos(root->right, arr, top + 1);
     }
-    if (isLeaf(root)) {
+    if (es_hoja(root)) {
         printf("%c: ", root->data);
-        printArr(arr, top);
+        imprimir_arreglo(arr, top);
     }
 }
 
-void storeCodes(MinHeapNode* root, int arr[], int top, char* codes[]) {
+//Almacena los códigos de Huffman en un arreglo.
+void almacenar_codigos(Grupo_Nodo_Menor* root, int arr[], int top, char* codes[]) {
     if (root->left) {
         arr[top] = 0;
-        storeCodes(root->left, arr, top + 1, codes);
+        almacenar_codigos(root->left, arr, top + 1, codes);
     }
     if (root->right) {
         arr[top] = 1;
-        storeCodes(root->right, arr, top + 1, codes);
+        almacenar_codigos(root->right, arr, top + 1, codes);
     }
-    if (isLeaf(root)) {
+    if (es_hoja(root)) {
         codes[root->data] = (char*)malloc(top + 1);
         for (int i = 0; i < top; i++) {
             codes[root->data][i] = arr[i] + '0';
@@ -152,24 +210,27 @@ void storeCodes(MinHeapNode* root, int arr[], int top, char* codes[]) {
     }
 }
 
-void HuffmanCodes(char data[], int freq[], int size) {
-    MinHeapNode* root = buildHuffmanTree(data, freq, size);
+//Genera y muestra los códigos de Huffman.
+void codigo_huffman(char data[], int freq[], int size) {
+    Grupo_Nodo_Menor* root = construir_arbol_huffman(data, freq, size);
     int arr[MAX_TREE_HT], top = 0;
-    printCodes(root, arr, top);
+    imprimir_codigos(root, arr, top);
 }
 
-void calculateFrequency(const char* text, int* freq) {
+//Calcula la frecuencia de cada carácter en el texto.
+void calcular_frecuencia(const char* text, int* freq) {
     for (int i = 0; text[i]; i++) {
         freq[(unsigned char)text[i]]++;
     }
 }
 
-char* compressText(const char* text, MinHeapNode* root, int* compressedSize) {
+//Comprime el texto usando los códigos de Huffman.
+char* comprimir_texto(const char* text, Grupo_Nodo_Menor* root, int* archivo_comprimidoSize) {
     int arr[MAX_TREE_HT], top = 0;
     char* codes[256] = {NULL};
-    storeCodes(root, arr, top, codes);
+    almacenar_codigos(root, arr, top, codes);
 
-    char* compressedText = (char*)malloc(strlen(text) * 8); // Worst case scenario
+    char* archivo_comprimidoText = (char*)malloc(strlen(text) * 8); // Worst case scenario
     int index = 0;
     char currentByte = 0;
     int bitCount = 0;
@@ -180,7 +241,7 @@ char* compressText(const char* text, MinHeapNode* root, int* compressedSize) {
             currentByte = (currentByte << 1) | (code[j] - '0');
             bitCount++;
             if (bitCount == 8) {
-                compressedText[index++] = currentByte;
+                archivo_comprimidoText[index++] = currentByte;
                 currentByte = 0;
                 bitCount = 0;
             }
@@ -189,10 +250,10 @@ char* compressText(const char* text, MinHeapNode* root, int* compressedSize) {
 
     if (bitCount > 0) {
         currentByte <<= (8 - bitCount);
-        compressedText[index++] = currentByte;
+        archivo_comprimidoText[index++] = currentByte;
     }
 
-    *compressedSize = index;
+    *archivo_comprimidoSize = index;
 
     for (int i = 0; i < 256; i++) {
                 if (codes[i]) {
@@ -200,26 +261,28 @@ char* compressText(const char* text, MinHeapNode* root, int* compressedSize) {
         }
     }
 
-    return compressedText;
+    return archivo_comprimidoText;
 }
 
-void saveHuffmanTree(MinHeapNode* root, FILE* file) {
+//Guarda el árbol de Huffman en un archivo.
+void guardar_arbol_huffman(Grupo_Nodo_Menor* root, FILE* file) {
     if (root == NULL) {
         fprintf(file, "0");
         return;
     }
 
     fprintf(file, "1");
-    if (isLeaf(root)) {
+    if (es_hoja(root)) {
         fprintf(file, "1%c", root->data);
     } else {
         fprintf(file, "0");
-        saveHuffmanTree(root->left, file);
-        saveHuffmanTree(root->right, file);
+        guardar_arbol_huffman(root->left, file);
+        guardar_arbol_huffman(root->right, file);
     }
 }
 
-MinHeapNode* loadHuffmanTree(FILE* file) {
+//Carga el árbol de Huffman desde un archivo.
+Grupo_Nodo_Menor* cargar_arbol_huffman(FILE* file) {
     char c;
     if (fscanf(file, "%c", &c) == EOF || c == '0') {
         return NULL;
@@ -232,18 +295,28 @@ MinHeapNode* loadHuffmanTree(FILE* file) {
     if (c == '1') {
         char data;
         fscanf(file, "%c", &data);
-        return newNode(data, 0);
+        return nuevo_nodo(data, 0);
     } else {
-        MinHeapNode* node = newNode('$', 0);
-        node->left = loadHuffmanTree(file);
-        node->right = loadHuffmanTree(file);
+        Grupo_Nodo_Menor* node = nuevo_nodo('$', 0);
+        node->left = cargar_arbol_huffman(file);
+        node->right = cargar_arbol_huffman(file);
         return node;
     }
 }
 
+//Imprime bits de bytes
+void imprimir_bits(unsigned char byte) {
+    for (int i = 7; i >= 0; i--) {
+        printf("%d", (byte >> i) & 1);
+    }
+}
+
+
+
+//Función principal-main
 int main() {
-    const char* filename = "/Users/imagemaker/Desarrollo/EDD/EDD_EX_002/salmo23.txt";
-    FILE* file = fopen(filename, "r");
+    const char* filename = "salmo23.txt";
+    FILE* file = fopen(filename, "rb");
     if (file == NULL) {
         printf("Error al abrir el archivo %s\n", filename);
         return 1;
@@ -253,7 +326,7 @@ int main() {
     long fileSize = ftell(file);
     fseek(file, 0, SEEK_SET);
 
-    char* text = (char*)malloc(fileSize + 1);
+    unsigned char* text = (unsigned char*)malloc(fileSize);
     if (text == NULL) {
         printf("Error al asignar memoria\n");
         fclose(file);
@@ -261,13 +334,12 @@ int main() {
     }
 
     size_t bytesRead = fread(text, 1, fileSize, file);
-    text[bytesRead] = '\0';
     fclose(file);
 
     printf("Tamaño original del archivo: %ld bytes\n", fileSize);
 
     int freq[MAX_CHARS] = {0};
-    calculateFrequency(text, freq);
+    calcular_frecuencia(text, freq);
 
     char data[MAX_CHARS];
     int freqValues[MAX_CHARS];
@@ -281,40 +353,27 @@ int main() {
         }
     }
 
-    MinHeapNode* root = buildHuffmanTree(data, freqValues, size);
+    Grupo_Nodo_Menor* root = construir_arbol_huffman(data, freqValues, size);
 
-    int compressedSize;
-    char* compressedText = compressText(text, root, &compressedSize);
-    printf("Tamaño comprimido: %d bytes\n", compressedSize);
+    int archivo_comprimidoSize;
+    char* archivo_comprimidoText = comprimir_texto(text, root, &archivo_comprimidoSize);
+    printf("Tamaño comprimido: %d bytes\n", archivo_comprimidoSize);
 
-    FILE* compressedFile = fopen("compressed.bin", "wb");
-    fwrite(compressedText, sizeof(char), compressedSize, compressedFile);
-    fclose(compressedFile);
+    FILE* archivo_comprimidoFile = fopen("archivo_comprimido.bin", "wb");
+    fwrite(archivo_comprimidoText, sizeof(char), archivo_comprimidoSize, archivo_comprimidoFile);
+    fclose(archivo_comprimidoFile);
 
-    FILE* treeFile = fopen("huffman_tree.bin", "w");
-    saveHuffmanTree(root, treeFile);
+    FILE* treeFile = fopen("arbol_huffman.bin", "w");
+    guardar_arbol_huffman(root, treeFile);
     fclose(treeFile);
 
     printf("Archivo comprimido y árbol de Huffman guardados.\n");
 
-    // Simulación de restauración en otro computador
-    FILE* compressedReadFile = fopen("compressed.bin", "rb");
-    fseek(compressedReadFile, 0, SEEK_END);
-    int compressedReadSize = ftell(compressedReadFile);
-    fseek(compressedReadFile, 0, SEEK_SET);
-
-    char* compressedReadText = (char*)malloc(compressedReadSize);
-    fread(compressedReadText, sizeof(char), compressedReadSize, compressedReadFile);
-    fclose(compressedReadFile);
-
-    FILE* treeReadFile = fopen("huffman_tree.bin", "r");
-    MinHeapNode* loadedRoot = loadHuffmanTree(treeReadFile);
-    fclose(treeReadFile);
-
     free(text);
-    free(compressedText);
-    free(compressedReadText);
+    free(archivo_comprimidoText);
 
     return 0;
 }
+
+
 

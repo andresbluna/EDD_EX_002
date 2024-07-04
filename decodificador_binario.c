@@ -1,29 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define MAX_TREE_HT 100
 #define MAX_CHARS 256
 
-typedef struct MinHeapNode {
+typedef struct Grupo_Nodo_Menor {
     char data;
     unsigned freq;
-    struct MinHeapNode *left, *right;
-} MinHeapNode;
+    struct Grupo_Nodo_Menor *left, *right;
+} Grupo_Nodo_Menor;
 
-MinHeapNode* newNode(char data, unsigned freq) {
-    MinHeapNode* temp = (MinHeapNode*) malloc(sizeof(MinHeapNode));
+Grupo_Nodo_Menor* nuevo_nodo(char data, unsigned freq) {
+    Grupo_Nodo_Menor* temp = (Grupo_Nodo_Menor*) malloc(sizeof(Grupo_Nodo_Menor));
     temp->left = temp->right = NULL;
     temp->data = data;
     temp->freq = freq;
     return temp;
 }
 
-int isLeaf(MinHeapNode* root) {
+int es_hoja(Grupo_Nodo_Menor* root) {
     return !(root->left) && !(root->right);
 }
 
-MinHeapNode* loadHuffmanTree(FILE* file) {
+Grupo_Nodo_Menor* loadHuffmanTree(FILE* file) {
     char c;
     if (fscanf(file, "%c", &c) == EOF || c == '0') {
         return NULL;
@@ -36,22 +35,22 @@ MinHeapNode* loadHuffmanTree(FILE* file) {
     if (c == '1') {
         char data;
         fscanf(file, "%c", &data);
-        return newNode(data, 0);
+        return nuevo_nodo(data, 0);
     } else {
-        MinHeapNode* node = newNode('$', 0);
+        Grupo_Nodo_Menor* node = nuevo_nodo('$', 0);
         node->left = loadHuffmanTree(file);
         node->right = loadHuffmanTree(file);
         return node;
     }
 }
 
-char* decompressText(const char* compressedText, MinHeapNode* root, int compressedSize) {
-    char* decompressedText = (char*)malloc(compressedSize * 8); // Worst case scenario
+char* decomprimir_texto(const char* archivo_comprimidoText, Grupo_Nodo_Menor* root, int archivo_comprimidoSize) {
+    char* dearchivo_comprimidoText = (char*)malloc(archivo_comprimidoSize * 8); // Worst case scenario
     int index = 0;
-    MinHeapNode* current = root;
+    Grupo_Nodo_Menor* current = root;
 
-    for (int i = 0; i < compressedSize; i++) {
-        char byte = compressedText[i];
+    for (int i = 0; i < archivo_comprimidoSize; i++) {
+        char byte = archivo_comprimidoText[i];
         for (int j = 7; j >= 0; j--) {
             int bit = (byte >> j) & 1;
             if (bit == 0) {
@@ -60,18 +59,18 @@ char* decompressText(const char* compressedText, MinHeapNode* root, int compress
                 current = current->right;
             }
 
-            if (isLeaf(current)) {
-                decompressedText[index++] = current->data;
+            if (es_hoja(current)) {
+                dearchivo_comprimidoText[index++] = current->data;
                 current = root;
             }
         }
     }
 
-    decompressedText[index] = '\0';
-    return decompressedText;
+    dearchivo_comprimidoText[index] = '\0';
+    return dearchivo_comprimidoText;
 }
 
-void freeHuffmanTree(MinHeapNode* root) {
+void freeHuffmanTree(Grupo_Nodo_Menor* root) {
     if (root == NULL) return;
     freeHuffmanTree(root->left);
     freeHuffmanTree(root->right);
@@ -79,57 +78,53 @@ void freeHuffmanTree(MinHeapNode* root) {
 }
 
 int main() {
-    const char* compressedFilename = "compressed.bin";
-    const char* treeFilename = "huffman_tree.bin";
-    const char* outputFilename = "decompressed.txt";
+    const char* archivo_comprimidoFilename = "archivo_comprimido.bin";
+    const char* treeFilename = "arbol_huffman.bin";
+    const char* outputFilename = "archivo_descomprimido.txt";
 
-    // Leer el archivo comprimido
-    FILE* compressedFile = fopen(compressedFilename, "rb");
-    if (compressedFile == NULL) {
+
+    FILE* archivo_comprimidoFile = fopen(archivo_comprimidoFilename, "rb");
+    if (archivo_comprimidoFile == NULL) {
         printf("Error al abrir el archivo comprimido.\n");
         return 1;
     }
 
-    fseek(compressedFile, 0, SEEK_END);
-    int compressedSize = ftell(compressedFile);
-    fseek(compressedFile, 0, SEEK_SET);
+    fseek(archivo_comprimidoFile, 0, SEEK_END);
+    int archivo_comprimidoSize = ftell(archivo_comprimidoFile);
+    fseek(archivo_comprimidoFile, 0, SEEK_SET);
 
-    char* compressedText = (char*)malloc(compressedSize);
-    fread(compressedText, sizeof(char), compressedSize, compressedFile);
-    fclose(compressedFile);
+    char* archivo_comprimidoText = (char*)malloc(archivo_comprimidoSize);
+    fread(archivo_comprimidoText, sizeof(char), archivo_comprimidoSize, archivo_comprimidoFile);
+    fclose(archivo_comprimidoFile);
 
-    // Leer el árbol de Huffman
     FILE* treeFile = fopen(treeFilename, "r");
     if (treeFile == NULL) {
         printf("Error al abrir el archivo del árbol de Huffman.\n");
-        free(compressedText);
+        free(archivo_comprimidoText);
         return 1;
     }
 
-    MinHeapNode* root = loadHuffmanTree(treeFile);
+    Grupo_Nodo_Menor* root = loadHuffmanTree(treeFile);
     fclose(treeFile);
 
-    // Descomprimir el texto
-    char* decompressedText = decompressText(compressedText, root, compressedSize);
+    char* dearchivo_comprimidoText = decomprimir_texto(archivo_comprimidoText, root, archivo_comprimidoSize);
 
-    // Guardar el texto descomprimido en un archivo
     FILE* outputFile = fopen(outputFilename, "w");
     if (outputFile == NULL) {
         printf("Error al crear el archivo de salida.\n");
-        free(compressedText);
-        free(decompressedText);
+        free(archivo_comprimidoText);
+        free(dearchivo_comprimidoText);
         freeHuffmanTree(root);
         return 1;
     }
 
-    fprintf(outputFile, "%s", decompressedText);
+    fprintf(outputFile, "%s", dearchivo_comprimidoText);
     fclose(outputFile);
 
     printf("Texto descomprimido guardado en '%s'.\n", outputFilename);
 
-    // Liberar memoria
-    free(compressedText);
-    free(decompressedText);
+    free(archivo_comprimidoText);
+    free(dearchivo_comprimidoText);
     freeHuffmanTree(root);
 
     return 0;
