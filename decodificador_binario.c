@@ -1,131 +1,98 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define MAX_TREE_HT 100
-#define MAX_CHARS 256
-
-typedef struct Grupo_Nodo_Menor {
+typedef struct Nodo {
     char data;
     unsigned freq;
-    struct Grupo_Nodo_Menor *left, *right;
-} Grupo_Nodo_Menor;
+    struct Nodo *left, *right;
+} Nodo;
 
-Grupo_Nodo_Menor* nuevo_nodo(char data, unsigned freq) {
-    Grupo_Nodo_Menor* temp = (Grupo_Nodo_Menor*) malloc(sizeof(Grupo_Nodo_Menor));
-    temp->left = temp->right = NULL;
-    temp->data = data;
-    temp->freq = freq;
-    return temp;
+Nodo* crearNodo(char data, unsigned freq) {
+    Nodo* nodo = (Nodo*) malloc(sizeof(Nodo));
+    nodo->data = data;
+    nodo->freq = freq;
+    nodo->left = nodo->right = NULL;
+    return nodo;
 }
 
-int es_hoja(Grupo_Nodo_Menor* root) {
-    return !(root->left) && !(root->right);
-}
-
-Grupo_Nodo_Menor* loadHuffmanTree(FILE* file) {
-    char c;
-    if (fscanf(file, "%c", &c) == EOF || c == '0') {
+Nodo* cargarArbolHuffman(FILE* file) {
+    char tipoNodo;
+    if (fscanf(file, "%c", &tipoNodo) != 1 || tipoNodo == '0')
         return NULL;
-    }
 
-    if (fscanf(file, "%c", &c) == EOF) {
-        return NULL;
-    }
-
-    if (c == '1') {
+    if (tipoNodo == 'L') {
         char data;
         fscanf(file, "%c", &data);
-        return nuevo_nodo(data, 0);
-    } else {
-        Grupo_Nodo_Menor* node = nuevo_nodo('$', 0);
-        node->left = loadHuffmanTree(file);
-        node->right = loadHuffmanTree(file);
-        return node;
+        return crearNodo(data, 0);
+    } else if (tipoNodo == 'I') {
+        Nodo* nodo = crearNodo('$', 0);
+        nodo->left = cargarArbolHuffman(file);
+        nodo->right = cargarArbolHuffman(file);
+        return nodo;
     }
+
+    return NULL;
 }
 
-char* decomprimir_texto(const char* archivo_comprimidoText, Grupo_Nodo_Menor* root, int archivo_comprimidoSize) {
-    char* dearchivo_comprimidoText = (char*)malloc(archivo_comprimidoSize * 8); // Worst case scenario
-    int index = 0;
-    Grupo_Nodo_Menor* current = root;
+char* decodificar(Nodo* raiz, unsigned char* strComprimido, int longitud) {
+    char* decodificado = (char*) malloc(longitud * 8 + 1); // Cada byte puede contener hasta 8 bits.
+    Nodo* current = raiz;
+    int bitIndex = 0, decodeIndex = 0;
 
-    for (int i = 0; i < archivo_comprimidoSize; i++) {
-        char byte = archivo_comprimidoText[i];
+    for (int i = 0; i < longitud; i++) {
         for (int j = 7; j >= 0; j--) {
-            int bit = (byte >> j) & 1;
+            int bit = (strComprimido[i] >> j) & 1;
             if (bit == 0) {
                 current = current->left;
             } else {
                 current = current->right;
             }
-
-            if (es_hoja(current)) {
-                dearchivo_comprimidoText[index++] = current->data;
-                current = root;
+            if (current->left == NULL && current->right == NULL) {
+                decodificado[decodeIndex++] = current->data;
+                current = raiz;
             }
         }
     }
-
-    dearchivo_comprimidoText[index] = '\0';
-    return dearchivo_comprimidoText;
-}
-
-void freeHuffmanTree(Grupo_Nodo_Menor* root) {
-    if (root == NULL) return;
-    freeHuffmanTree(root->left);
-    freeHuffmanTree(root->right);
-    free(root);
+    decodificado[decodeIndex] = '\0';
+    return decodificado;
 }
 
 int main() {
-    const char* archivo_comprimidoFilename = "comprimido.bin";
-    const char* treeFilename = "arbol.bin";
-    const char* outputFilename = "archivo_descomprimido.txt";
+    FILE* treeFile = fopen("arbol.bin", "rb");
+    if (!treeFile) {
+        printf("Error al abrir el archivo del árbol.\n");
+        return 1;
+    }
+    Nodo* raiz = cargarArbolHuffman(treeFile);
+    fclose(treeFile);
 
-
-    FILE* archivo_comprimidoFile = fopen(archivo_comprimidoFilename, "rb");
-    if (archivo_comprimidoFile == NULL) {
+    FILE* comprimidoFile = fopen("comprimido.bin", "rb");
+    if (!comprimidoFile) {
         printf("Error al abrir el archivo comprimido.\n");
         return 1;
     }
 
-    fseek(archivo_comprimidoFile, 0, SEEK_END);
-    int archivo_comprimidoSize = ftell(archivo_comprimidoFile);
-    fseek(archivo_comprimidoFile, 0, SEEK_SET);
+    fseek(comprimidoFile, 0, SEEK_END);
+    long fileSize = ftell(comprimidoFile);
+    fseek(comprimidoFile, 0, SEEK_SET);
+    unsigned char* comprimido = (unsigned char*) malloc(fileSize);
+    fread(comprimido, 1, fileSize, comprimidoFile);
+    fclose(comprimidoFile);
 
-    char* archivo_comprimidoText = (char*)malloc(archivo_comprimidoSize);
-    fread(archivo_comprimidoText, sizeof(char), archivo_comprimidoSize, archivo_comprimidoFile);
-    fclose(archivo_comprimidoFile);
+    char* textoDecodificado = decodificar(raiz, comprimido, fileSize);
+    printf("Texto Decodificado: %s\n", textoDecodificado);
 
-    FILE* treeFile = fopen(treeFilename, "r");
-    if (treeFile == NULL) {
-        printf("Error al abrir el archivo del árbol de Huffman.\n");
-        free(archivo_comprimidoText);
+    FILE* salidaFile = fopen("salida.txt", "w");
+    if (!salidaFile) {
+        printf("Error al abrir el archivo de salida.\n");
+        free(textoDecodificado);
         return 1;
     }
+    fprintf(salidaFile, "%s", textoDecodificado);
+    fclose(salidaFile);
 
-    Grupo_Nodo_Menor* root = loadHuffmanTree(treeFile);
-    fclose(treeFile);
-
-    char* dearchivo_comprimidoText = decomprimir_texto(archivo_comprimidoText, root, archivo_comprimidoSize);
-
-    FILE* outputFile = fopen(outputFilename, "w");
-    if (outputFile == NULL) {
-        printf("Error al crear el archivo de salida.\n");
-        free(archivo_comprimidoText);
-        free(dearchivo_comprimidoText);
-        freeHuffmanTree(root);
-        return 1;
-    }
-
-    fprintf(outputFile, "%s", dearchivo_comprimidoText);
-    fclose(outputFile);
-
-    printf("Texto descomprimido guardado en '%s'.\n", outputFilename);
-
-    free(archivo_comprimidoText);
-    free(dearchivo_comprimidoText);
-    freeHuffmanTree(root);
-
+    free(comprimido);
+    free(textoDecodificado);
     return 0;
 }

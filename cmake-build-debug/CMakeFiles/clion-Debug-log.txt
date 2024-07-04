@@ -1,9 +1,9 @@
 /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/imagemaker/Desarrollo/EDD/EDD_EX_002 -B /Users/imagemaker/Desarrollo/EDD/EDD_EX_002/cmake-build-debug
--- Configuring done (0.0s)
+-- Configuring done (0.1s)
 CMake Error at CMakeLists.txt:6 (add_executable):
   Cannot find source file:
 
-    codigo_huffman/arbol_huffman.h
+    codigo_huffman_main.c
 
 
 CMake Error at CMakeLists.txt:6 (add_executable):

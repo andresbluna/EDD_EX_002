@@ -34,14 +34,14 @@ Nodo* crearNodo(char data, unsigned freq) {
     nodo->numChildren = 0;
     return nodo;
 }
-
+// Función para insertar hijo en nodo
 void insertarHijo(Nodo* padre, Nodo* hijo) {
     if (padre->numChildren < MAX_CHILDREN) {
         padre->children[padre->numChildren] = hijo;
         padre->numChildren++;
     }
 }
-
+//Función para hacer recorrido de Preorden
 void recorridoPreordenGeneral(Nodo* nodo) {
     if (nodo == NULL)
         return;
@@ -51,6 +51,7 @@ void recorridoPreordenGeneral(Nodo* nodo) {
     }
 }
 
+//Función para hacer recorrido Post Orden
 void recorridoPostordenGeneral(Nodo* nodo) {
     if (nodo == NULL)
         return;
@@ -297,42 +298,42 @@ char* comprimirTexto(const char* text, Nodo* nodo, int* comprimidoSize) {
 // Función para guardar el árbol de Huffman en los archivos
 void guardarArbolHuffman(Nodo* nodo, FILE* file) {
     if (nodo == NULL) {
-        fputc(0, file);
+        fputc('0', file);  // Usamos '0' para indicar un nodo nulo
         return;
     }
 
-    fputc(1, file);
     if (esHoja(nodo)) {
-        fputc(1, file);
+        fputc('L', file);  // 'L' para indicar que es una hoja
         fputc(nodo->data, file);
     } else {
-        fputc(0, file);
+        fputc('I', file);  // 'I' para indicar que es un nodo interno
         guardarArbolHuffman(nodo->left, file);
         guardarArbolHuffman(nodo->right, file);
     }
 }
 
 
+
 // Función para cargar el árbol de Huffman desde un archivo
 Nodo* cargarArbolHuffman(FILE* file) {
-    char c;
-    if (fscanf(file, "%c", &c) == EOF || c == '0')
+    char tipoNodo;
+    if (fscanf(file, "%c", &tipoNodo) != 1 || tipoNodo == '0')
         return NULL;
 
-    if (fscanf(file, "%c", &c) == EOF)
-        return NULL;
-
-    if (c == '1') {
+    if (tipoNodo == 'L') {
         char data;
         fscanf(file, "%c", &data);
         return crearNodo(data, 0);
-    } else {
+    } else if (tipoNodo == 'I') {
         Nodo* nodo = crearNodo('$', 0);
         nodo->left = cargarArbolHuffman(file);
         nodo->right = cargarArbolHuffman(file);
         return nodo;
     }
+
+    return NULL;
 }
+
 
 // Función principal
 int main() {
