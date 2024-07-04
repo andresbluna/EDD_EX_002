@@ -61,6 +61,24 @@ build CMakeFiles/EDD_EX_002.dir/romantico_viajero_main.c.o: C_COMPILER__EDD_EX_0
   OBJECT_DIR = CMakeFiles/EDD_EX_002.dir
   OBJECT_FILE_DIR = CMakeFiles/EDD_EX_002.dir
 
+build CMakeFiles/EDD_EX_002.dir/codigo_huffman/huffman_tree.c.o: C_COMPILER__EDD_EX_002_unscanned_Debug /Users/imagemaker/Desarrollo/EDD/EDD_EX_002/codigo_huffman/huffman_tree.c || cmake_object_order_depends_target_EDD_EX_002
+  DEP_FILE = CMakeFiles/EDD_EX_002.dir/codigo_huffman/huffman_tree.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/EDD_EX_002.dir
+  OBJECT_FILE_DIR = CMakeFiles/EDD_EX_002.dir/codigo_huffman
+
+build CMakeFiles/EDD_EX_002.dir/decodificador_binario.c.o: C_COMPILER__EDD_EX_002_unscanned_Debug /Users/imagemaker/Desarrollo/EDD/EDD_EX_002/decodificador_binario.c || cmake_object_order_depends_target_EDD_EX_002
+  DEP_FILE = CMakeFiles/EDD_EX_002.dir/decodificador_binario.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/EDD_EX_002.dir
+  OBJECT_FILE_DIR = CMakeFiles/EDD_EX_002.dir
+
+build CMakeFiles/EDD_EX_002.dir/codigo_huffman_02.c.o: C_COMPILER__EDD_EX_002_unscanned_Debug /Users/imagemaker/Desarrollo/EDD/EDD_EX_002/codigo_huffman_02.c || cmake_object_order_depends_target_EDD_EX_002
+  DEP_FILE = CMakeFiles/EDD_EX_002.dir/codigo_huffman_02.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/EDD_EX_002.dir
+  OBJECT_FILE_DIR = CMakeFiles/EDD_EX_002.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target EDD_EX_002
@@ -69,7 +87,7 @@ build CMakeFiles/EDD_EX_002.dir/romantico_viajero_main.c.o: C_COMPILER__EDD_EX_0
 #############################################
 # Link the executable EDD_EX_002
 
-build EDD_EX_002: C_EXECUTABLE_LINKER__EDD_EX_002_Debug CMakeFiles/EDD_EX_002.dir/codigo_huffman_main.c.o CMakeFiles/EDD_EX_002.dir/romantico_viajero_main.c.o
+build EDD_EX_002: C_EXECUTABLE_LINKER__EDD_EX_002_Debug CMakeFiles/EDD_EX_002.dir/codigo_huffman_main.c.o CMakeFiles/EDD_EX_002.dir/romantico_viajero_main.c.o CMakeFiles/EDD_EX_002.dir/codigo_huffman/huffman_tree.c.o CMakeFiles/EDD_EX_002.dir/decodificador_binario.c.o CMakeFiles/EDD_EX_002.dir/codigo_huffman_02.c.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk
   OBJECT_DIR = CMakeFiles/EDD_EX_002.dir
   POST_BUILD = :
