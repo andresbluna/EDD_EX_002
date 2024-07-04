@@ -23,7 +23,6 @@ Nodo* cargarArbolHuffman(FILE* file) {
     char tipoNodo;
     if (fscanf(file, "%c", &tipoNodo) != 1 || tipoNodo == '0')
         return NULL;
-
     if (tipoNodo == 'L') {
         char data;
         fscanf(file, "%c", &data);
